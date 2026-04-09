@@ -1,0 +1,50 @@
+[
+  {
+    "id": "itau",
+    "nome": "Itaú",
+    "cpf": "111.111.111-11",
+    "senha": "itau123",
+    "saldo": 5000.00,
+    "cor": "#EC7000"
+  },
+  {
+    "id": "nubank",
+    "nome": "Nubank",
+    "cpf": "222.222.222-22",
+    "senha": "nubank123",
+    "saldo": 3200.50,
+    "cor": "#820AD1"
+  },
+  {
+    "id": "bradesco",
+    "nome": "Bradesco",
+    "cpf": "333.333.333-33",
+    "senha": "bradesco123",
+    "saldo": 7800.00,
+    "cor": "#CC092F"
+  },
+  {
+    "id": "santander",
+    "nome": "Santander",
+    "cpf": "444.444.444-44",
+    "senha": "santander123",
+    "saldo": 4100.75,
+    "cor": "#EC0000"
+  },
+  {
+    "id": "picpay",
+    "nome": "PicPay",
+    "cpf": "555.555.555-55",
+    "senha": "picpay123",
+    "saldo": 1500.00,
+    "cor": "#11C76F"
+  },
+  {
+    "id": "bb",
+    "nome": "Banco do Brasil",
+    "cpf": "666.666.666-66",
+    "senha": "bb123",
+    "saldo": 9500.00,
+    "cor": "#F9DD16"
+  }
+]

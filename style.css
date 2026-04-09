@@ -1,0 +1,202 @@
+/* =============================================================
+   style.css — Banco 24h | Fintech Informatica
+   ============================================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #f4f4f4;
+  color: #1a1a1a;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+
+/* ── Cabecalho ─────────────────────────────────────────────── */
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  letter-spacing: 1px;
+}
+
+/* Mensagem de sistema abaixo do titulo (erros de login, status) */
+#msg-sistema {
+  font-size: 0.9rem;
+  min-height: 1.3rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+  color: #555;
+}
+
+#msg-sistema.erro {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+/* ── Card generico ─────────────────────────────────────────── */
+
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 440px;
+  margin-bottom: 1rem;
+}
+
+.card h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #999;
+  margin-bottom: 1rem;
+}
+
+/* ── Inputs e selects ──────────────────────────────────────── */
+
+select,
+input {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+  background: #fafafa;
+  color: #1a1a1a;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+select:focus,
+input:focus {
+  border-color: #555;
+}
+
+/* ── Botoes ────────────────────────────────────────────────── */
+
+button {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+button:hover  { opacity: 0.82; }
+button:active { transform: scale(0.99); }
+
+.btn-primario   { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+.btn-secundario { background: #fff;    color: #1a1a1a; border-color: #ccc; }
+.btn-perigo     { background: #fff;    color: #c0392b; border-color: #c0392b; }
+
+/* ── Grid de acoes ─────────────────────────────────────────── */
+
+.grid-acoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.grid-acoes button {
+  margin-bottom: 0;
+}
+
+/* ── Saldo em destaque ─────────────────────────────────────── */
+
+#saldo-display {
+  font-size: 1.9rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 0.4rem 0 0.8rem;
+}
+
+/* ── Nome do banco no painel ───────────────────────────────── */
+
+#header-banco {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+/* ── Separador horizontal ──────────────────────────────────── */
+
+.separador {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 0.75rem 0;
+}
+
+/* ── Log de atividades ─────────────────────────────────────── */
+
+#log-titulo {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #999;
+  width: 100%;
+  max-width: 440px;
+  margin-bottom: 0.4rem;
+}
+
+#log-lista {
+  list-style: none;
+  width: 100%;
+  max-width: 440px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  /* ocultar quando vazio */
+  min-height: 48px;
+}
+
+#log-lista li {
+  padding: 0.55rem 1rem;
+  font-size: 0.83rem;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+  line-height: 1.5;
+}
+
+#log-lista li:last-child {
+  border-bottom: none;
+}
+
+#log-lista li .log-hora {
+  color: #aaa;
+  font-size: 0.75rem;
+  margin-right: 0.5rem;
+}
+
+#log-lista li .log-texto {
+  color: #27ae60;
+}
+
+#log-lista .log-vazio {
+  color: #bbb;
+  font-style: italic;
+  padding: 0.8rem 1rem;
+}
+
+/* ── Utilitario de visibilidade ────────────────────────────── */
+
+.oculto {
+  display: none !important;
+}

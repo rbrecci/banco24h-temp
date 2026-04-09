@@ -1,0 +1,26 @@
+[
+  {
+    "bancoid": "itau",
+    "historico": []
+  },
+  {
+    "bancoid": "nubank",
+    "historico": []
+  },
+  {
+    "bancoid": "bradesco",
+    "historico": []
+  },
+  {
+    "bancoid": "santander",
+    "historico": []
+  },
+  {
+    "bancoid": "picpay",
+    "historico": []
+  },
+  {
+    "bancoid": "bb",
+    "historico": []
+  }
+]
