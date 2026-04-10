@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Banco 24h — Fintech Informatica</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<header>
+        <div class="header-risc"></div>
+        <h1>Bem vindo ao caixa global 24h</h1> <i class="ph ph-timer"></i>
+    </header>
+    <main>
+        <h2 style="display: none;">Seu dinheiro no seu ritmo, <br>a qualquer hora do dia ou da noite.</h2>
+        <div class="container-main">
+            <div class="main-login" style="display: none;">
+                <form action="">
+                    <h2>Insira suas credenciais para continuar!</h2>
+                    
+                    <input type="text" placeholder="CPF do titular" id="input-cpf">
+                    <input type="password" placeholder="Senha" id="input-senha">
+                    <button type="button">Entrar</button>
+                </form>
+                <div></div>
+                <div class="img-left">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Ita%C3%BA_Unibanco_logo_2023.svg/960px-Ita%C3%BA_Unibanco_logo_2023.svg.png" alt="">
+                </div>
+            </div>
+
+
+            <div class="main-infos">
+                <div class="title"><h2>Bem vindo de volta Caio!</h2></div>
+                <div class="options">
+                    <div class="saldo">
+                        <p>Seu saldo</p>
+                        <div class="saldo-div">
+                            <p>R$ 1000,00</p> 
+                            <i class="ph ph-eye"></i>
+                        </div>
+                    </div>
+
+                    <div class="buttons-group">
+                        <div class="buttons-group-separar">
+                            <div class="buttons-options">Transferir <i class="ph ph-arrow-square-out"></i></div>
+                            <div class="buttons-options">Depositar <i class="ph ph-arrow-square-in"></i></div>
+                        </div>
+
+                        <div class="buttons-group-separar">
+                            <div class="buttons-options">Sacar <i class="ph ph-money-wavy"></i></div>
+                            <div class="buttons-options">Trocar senha <i class="ph ph-password"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="button-pdf">
+                        <p>Gerar extrato em pdf</p>
+                        <i class="ph ph-download-simple"></i>
+                    </div>
+                </div>
+
+                <div class="extrato-container">
+                    <div class="top-title">
+                        <h3>Lista de extrato bancário</h3>
+                    </div>
+                    <div class="exib-extrato"></div>
+                </div>
+
+                <div class="photo-img">
+                    <img class="logo-banco" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Ita%C3%BA_Unibanco_logo_2023.svg/960px-Ita%C3%BA_Unibanco_logo_2023.svg.png" alt="">
+                </div>
+            </div>
+        </div>
+    </main>
+    <nav>
+        <div class="space-for-circle-active"></div>
+        <div class="circle-groups">
+            <div class="circle itau"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Ita%C3%BA_Unibanco_logo_2023.svg/960px-Ita%C3%BA_Unibanco_logo_2023.svg.png" alt=""></div>
+            <div class="circle nubank"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Nubank_logo_2021.svg/1280px-Nubank_logo_2021.svg.png" alt=""></div>
+            <div class="circle bradesco"><img src="https://companieslogo.com/img/orig/BBD-6b19aac5.png?t=1720244490" alt=""></div>
+            <div class="circle santander"><img src="https://www.nicepng.com/png/full/407-4073616_sc-flame-santander-logo.png" alt=""></div>
+            <div class="circle picpay"><img src="https://images.seeklogo.com/logo-png/39/2/picpay-logo-png_seeklogo-393244.png" alt=""></div>
+            <div class="circle banco-brasil"><img src="https://cdn.freebiesupply.com/logos/large/2x/banco-do-brasil-01-logo-png-transparent.png" alt=""></div>
+        </div>
+    </nav>
+
+    <div class="circle-green-pai">
+        <div class="circle-green"></div>
+    </div>
+  <script src="controller/bancoController.js"></script>
+
+  <script>
+    // ── Referencias fixas ──────────────────────────────────────
+    const secaoLogin   = document.getElementById('secao-login');
+    const secaoPainel  = document.getElementById('secao-painel');
+    const secaoAcoes   = document.getElementById('secao-acoes');
+    const secaoExtrato = document.getElementById('secao-extrato');
+    const inputCPF     = document.getElementById('input-cpf');
+    const inputSenha   = document.getElementById('input-senha');
+    const msgLogin     = document.getElementById('msg-login');
+    const msgSistema   = document.getElementById('msg-sistema');
+    const headerBanco  = document.getElementById('header-banco');
+    const saldoDisplay = document.getElementById('saldo-display');
+    const extratoCorpo = document.getElementById('extrato-corpo');
+    const modalOverlay = document.getElementById('modal-overlay');
+    const modalBox     = document.getElementById('modal-box');
+    const radioBancos  = document.getElementById('radio-bancos');
+
+    const banco = new BancoController();
+
+    // ── Estado local de UI ─────────────────────────────────────
+    let saldoVisivel = true;
+
+    // ══════════════════════════════════════════════════════════
+    //  HELPERS DE MENSAGEM
+    // ══════════════════════════════════════════════════════════
+
+    function setMsgSistema(texto, tipo = 'aviso') {
+      msgSistema.textContent = texto;
+      msgSistema.className   = tipo; // 'aviso' | 'erro'
+    }
+
+    function setMsgLogin(texto, tipo = 'erro') {
+      msgLogin.textContent = texto;
+      msgLogin.className   = `msg-form ${tipo}`;
+    }
+
+    function limparMsgLogin() {
+      msgLogin.textContent = '';
+      msgLogin.className   = 'msg-form';
+    }
+
+    // ══════════════════════════════════════════════════════════
+    //  HELPERS DE SALDO
+    // ══════════════════════════════════════════════════════════
+
+    function atualizarSaldo() {
+      const { saldoFormatado } = banco.getSaldo();
+      if (saldoVisivel) {
+        saldoDisplay.textContent = saldoFormatado;
+        saldoDisplay.classList.remove('escondido');
+        document.getElementById('btn-toggle-saldo').textContent = 'Ocultar';
+      } else {
+        // Substitui os caracteres por bolinhas
+        saldoDisplay.textContent = '● ● ● ● ●';
+        saldoDisplay.classList.add('escondido');
+        document.getElementById('btn-toggle-saldo').textContent = 'Exibir';
+      }
+    }
+
+    document.getElementById('btn-toggle-saldo').addEventListener('click', () => {
+      saldoVisivel = !saldoVisivel;
+      atualizarSaldo();
+    });
+
+    // ══════════════════════════════════════════════════════════
+    //  HELPERS DE EXTRATO
+    // ══════════════════════════════════════════════════════════
+
+    /**
+     * Renderiza o extrato completo na tabela.
+     * Chamado apos cada operacao financeira e no login.
+     */
+    function renderizarExtrato() {
+      const historico = banco.getExtrato();
+      extratoCorpo.innerHTML = '';
+
+      if (historico.length === 0) {
+        extratoCorpo.innerHTML =
+          '<tr><td colspan="5" class="extrato-vazio">Nenhuma transacao registrada.</td></tr>';
+        return;
+      }
+
+      // Exibe do mais recente para o mais antigo
+      [...historico].reverse().forEach(t => {
+        const tr = document.createElement('tr');
+
+        const classeValor = t.natureza === 'debito'
+          ? 'td-valor valor-negativo'
+          : t.natureza === 'credito'
+            ? 'td-valor valor-positivo'
+            : 'td-valor';
+
+        const prefixo = t.natureza === 'debito' ? '- ' : t.natureza === 'credito' ? '+ ' : '';
+
+        tr.innerHTML = `
+          <td class="td-data">${t.dataHora}</td>
+          <td class="td-tipo">${t.tipo}</td>
+          <td>${t.obs || '—'}</td>
+          <td class="${classeValor}">${t.valorFormatado ? prefixo + t.valorFormatado : '—'}</td>
+          <td class="td-saldo">${t.saldoAposFormatado}</td>
+        `;
+
+        extratoCorpo.appendChild(tr);
+      });
+    }
+
+    // ══════════════════════════════════════════════════════════
+    //  MODAL GENERICO
+    //  Abre um pop-up HTML dentro da pagina (sem prompt/alert).
+    // ══════════════════════════════════════════════════════════
+
+    function abrirModal(htmlConteudo) {
+      modalBox.innerHTML   = htmlConteudo;
+      modalOverlay.classList.remove('oculto');
+    }
+
+    function fecharModal() {
+      modalOverlay.classList.add('oculto');
+      modalBox.innerHTML = '';
+    }
+
+    // Fechar ao clicar fora da box
+    modalOverlay.addEventListener('click', e => {
+      if (e.target === modalOverlay) fecharModal();
+    });
+
+    // ── Modal: operacao com valor unico (Saque / Deposito) ─────
+
+    function modalValor(titulo, labelValor, onConfirmar) {
+      abrirModal(`
+        <h4>${titulo}</h4>
+        <label class="campo-label" for="m-valor">${labelValor}</label>
+        <input type="text" id="m-valor" placeholder="0.00" autocomplete="off" />
+        <div class="msg-form" id="m-msg"></div>
+        <div class="modal-acoes">
+          <button class="btn-primario"   id="m-confirmar">Confirmar</button>
+          <button class="btn-secundario" id="m-cancelar">Cancelar</button>
+        </div>
+      `);
+
+      document.getElementById('m-cancelar').addEventListener('click', fecharModal);
+
+      document.getElementById('m-confirmar').addEventListener('click', () => {
+        const entrada  = document.getElementById('m-valor').value;
+        const msgEl    = document.getElementById('m-msg');
+        const validacao = banco.validarValor(entrada);
+
+        if (!validacao.ok) {
+          msgEl.textContent = validacao.mensagem;
+          msgEl.className   = 'msg-form erro';
+          return;
+        }
+
+        fecharModal();
+        onConfirmar(validacao.valor);
+      });
+
+      // Confirmar com Enter
+      document.getElementById('m-valor').addEventListener('keydown', e => {
+        if (e.key === 'Enter') document.getElementById('m-confirmar').click();
+      });
+
+      document.getElementById('m-valor').focus();
+    }
+
+    // ── Modal: Transferencia (CPF destino + valor) ─────────────
+
+    function modalTransferencia(onConfirmar) {
+      abrirModal(`
+        <h4>Transferencia</h4>
+        <label class="campo-label" for="m-cpf">CPF de destino</label>
+        <input type="text" id="m-cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="off" />
+        <div class="msg-form" id="m-msg-cpf"></div>
+
+        <div id="m-destino-info" class="oculto" style="font-size:0.85rem;color:#555;margin-bottom:0.75rem;"></div>
+
+        <label class="campo-label" for="m-valor">Valor</label>
+        <input type="text" id="m-valor" placeholder="0.00" autocomplete="off" />
+        <div class="msg-form" id="m-msg-valor"></div>
+
+        <div class="modal-acoes">
+          <button class="btn-primario"   id="m-confirmar">Confirmar</button>
+          <button class="btn-secundario" id="m-cancelar">Cancelar</button>
+        </div>
+      `);
+
+      let cpfDestinoValido = null;
+
+      document.getElementById('m-cancelar').addEventListener('click', fecharModal);
+
+      // Valida CPF ao sair do campo
+      document.getElementById('m-cpf').addEventListener('blur', () => {
+        const cpf      = document.getElementById('m-cpf').value;
+        const msgCpf   = document.getElementById('m-msg-cpf');
+        const infoEl   = document.getElementById('m-destino-info');
+        const resultado = banco.validarCPFDestino(cpf);
+
+        if (!resultado.ok) {
+          msgCpf.textContent = resultado.mensagem;
+          msgCpf.className   = 'msg-form erro';
+          infoEl.classList.add('oculto');
+          cpfDestinoValido = null;
+        } else {
+          msgCpf.textContent = '';
+          infoEl.textContent = `Destino: ${resultado.banco.nome}`;
+          infoEl.classList.remove('oculto');
+          cpfDestinoValido = resultado.banco.cpf;
+        }
+      });
+
+      document.getElementById('m-confirmar').addEventListener('click', () => {
+        const msgCpf   = document.getElementById('m-msg-cpf');
+        const msgValor = document.getElementById('m-msg-valor');
+
+        // Revalida CPF caso o usuario nao tenha saido do campo
+        if (!cpfDestinoValido) {
+          const cpf       = document.getElementById('m-cpf').value;
+          const resultado = banco.validarCPFDestino(cpf);
+          if (!resultado.ok) {
+            msgCpf.textContent = resultado.mensagem;
+            msgCpf.className   = 'msg-form erro';
+            return;
+          }
+          cpfDestinoValido = resultado.banco.cpf;
+        }
+
+        const entrada   = document.getElementById('m-valor').value;
+        const validacao = banco.validarValor(entrada);
+        if (!validacao.ok) {
+          msgValor.textContent = validacao.mensagem;
+          msgValor.className   = 'msg-form erro';
+          return;
+        }
+
+        fecharModal();
+        onConfirmar(cpfDestinoValido, validacao.valor);
+      });
+
+      document.getElementById('m-cpf').focus();
+    }
+
+    // ── Modal: Troca de Senha ──────────────────────────────────
+
+    function modalTrocarSenha(onConfirmar) {
+      abrirModal(`
+        <h4>Trocar Senha</h4>
+        <label class="campo-label" for="m-atual">Senha atual</label>
+        <input type="password" id="m-atual" placeholder="••••••••" />
+
+        <label class="campo-label" for="m-nova">Nova senha</label>
+        <input type="password" id="m-nova" placeholder="••••••••" />
+
+        <label class="campo-label" for="m-confirma">Confirmar nova senha</label>
+        <input type="password" id="m-confirma" placeholder="••••••••" />
+
+        <div class="msg-form" id="m-msg"></div>
+
+        <div class="modal-acoes">
+          <button class="btn-primario"   id="m-confirmar">Confirmar</button>
+          <button class="btn-secundario" id="m-cancelar">Cancelar</button>
+        </div>
+      `);
+
+      document.getElementById('m-cancelar').addEventListener('click', fecharModal);
+
+      document.getElementById('m-confirmar').addEventListener('click', () => {
+        const atual     = document.getElementById('m-atual').value;
+        const nova      = document.getElementById('m-nova').value;
+        const confirma  = document.getElementById('m-confirma').value;
+        const msgEl     = document.getElementById('m-msg');
+
+        if (!atual) {
+          msgEl.textContent = 'Digite a senha atual.';
+          msgEl.className   = 'msg-form erro';
+          return;
+        }
+
+        if (!nova || nova.trim() === '') {
+          msgEl.textContent = 'A nova senha nao pode estar em branco.';
+          msgEl.className   = 'msg-form erro';
+          return;
+        }
+
+        if (nova !== confirma) {
+          msgEl.textContent = 'As senhas nao coincidem.';
+          msgEl.className   = 'msg-form erro';
+          return;
+        }
+
+        fecharModal();
+        onConfirmar(atual, nova);
+      });
+
+      document.getElementById('m-atual').focus();
+    }
+
+    // ══════════════════════════════════════════════════════════
+    //  INTERFACE — LOGIN / LOGOUT
+    // ══════════════════════════════════════════════════════════
+
+    function mostrarPainel(bancoDados) {
+      secaoLogin.classList.add('oculto');
+      secaoPainel.classList.remove('oculto');
+      secaoAcoes.classList.remove('oculto');
+      secaoExtrato.classList.remove('oculto');
+      headerBanco.textContent = bancoDados.nome;
+      saldoVisivel = true;
+      atualizarSaldo();
+      renderizarExtrato();
+    }
+
+    function mostrarLogin() {
+      secaoLogin.classList.remove('oculto');
+      secaoPainel.classList.add('oculto');
+      secaoAcoes.classList.add('oculto');
+      secaoExtrato.classList.add('oculto');
+      saldoDisplay.textContent = '—';
+      headerBanco.textContent  = '—';
+      inputCPF.value   = '';
+      inputSenha.value = '';
+      limparMsgLogin();
+    }
+
+    // ── Inicializacao ──────────────────────────────────────────
+    (async () => {
+      await banco.init();
+
+      // Gera os radios a partir da lista de bancos
+      banco.getBancos().forEach(b => {
+        const label = document.createElement('label');
+        label.innerHTML = `
+          <input type="radio" name="banco" value="${b.id}" />
+          <span>${b.nome}</span>
+        `;
+        radioBancos.appendChild(label);
+      });
+
+      setMsgSistema('Sistema carregado. Selecione um banco e faca login.');
+    })();
+
+    // ── Login ──────────────────────────────────────────────────
+    document.getElementById('btn-login').addEventListener('click', () => {
+      limparMsgLogin();
+
+      const radioSelecionado = document.querySelector('input[name="banco"]:checked');
+      if (!radioSelecionado) {
+        setMsgLogin('Selecione um banco.');
+        return;
+      }
+
+      const cpf   = inputCPF.value.trim();
+      const senha = inputSenha.value;
+
+      if (!cpf || !senha) {
+        setMsgLogin('Preencha o CPF e a senha.');
+        return;
+      }
+
+      const resultado = banco.login(cpf, senha);
+
+      if (resultado.ok) {
+        setMsgSistema(resultado.mensagem, 'aviso');
+        mostrarPainel(resultado.banco);
+      } else {
+        setMsgLogin(resultado.mensagem, 'erro');
+      }
+    });
+
+    // Confirmar login com Enter
+    inputSenha.addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('btn-login').click();
+    });
+
+    // ── Logout ─────────────────────────────────────────────────
+    document.getElementById('btn-logout').addEventListener('click', () => {
+      banco.logout();
+      mostrarLogin();
+      setMsgSistema('Sessao encerrada.');
+    });
+
+    // ══════════════════════════════════════════════════════════
+    //  OPERACOES FINANCEIRAS
+    // ══════════════════════════════════════════════════════════
+
+    document.getElementById('btn-saque').addEventListener('click', () => {
+      modalValor('Saque', 'Valor a sacar', (valor) => {
+        const resultado = banco.sacar(valor);
+        if (resultado.ok) {
+          atualizarSaldo();
+          renderizarExtrato();
+          setMsgSistema(resultado.mensagem);
+        } else {
+          // Saldo insuficiente: reabre o modal com o erro
+          modalValor('Saque', 'Valor a sacar', () => {});
+          document.getElementById('m-msg').textContent = resultado.mensagem;
+          document.getElementById('m-msg').className   = 'msg-form erro';
+        }
+      });
+    });
+
+    document.getElementById('btn-deposito').addEventListener('click', () => {
+      modalValor('Deposito', 'Valor a depositar', (valor) => {
+        const resultado = banco.depositar(valor);
+        if (resultado.ok) {
+          atualizarSaldo();
+          renderizarExtrato();
+          setMsgSistema(resultado.mensagem);
+        }
+      });
+    });
+
+    document.getElementById('btn-transferencia').addEventListener('click', () => {
+      modalTransferencia((cpfDestino, valor) => {
+        const resultado = banco.transferir(cpfDestino, valor);
+        if (resultado.ok) {
+          atualizarSaldo();
+          renderizarExtrato();
+          setMsgSistema(resultado.mensagem);
+        } else {
+          setMsgSistema(resultado.mensagem, 'erro');
+        }
+      });
+    });
+
+    document.getElementById('btn-senha').addEventListener('click', () => {
+      modalTrocarSenha((senhaAtual, novaSenha) => {
+        const resultado = banco.trocarSenha(senhaAtual, novaSenha);
+        if (resultado.ok) {
+          renderizarExtrato();
+          setMsgSistema(resultado.mensagem);
+        } else {
+          // Reabre o modal com o erro visivel
+          modalTrocarSenha(() => {});
+          document.getElementById('m-msg').textContent = resultado.mensagem;
+          document.getElementById('m-msg').className   = 'msg-form erro';
+        }
+      });
+    });
+
+    document.getElementById('btn-pdf').addEventListener('click', () => {
+      const resultado = banco.gerarPDF();
+      setMsgSistema(resultado.mensagem, resultado.ok ? 'aviso' : 'erro');
+    });
+  </script>
+
+</body>
+</html>
